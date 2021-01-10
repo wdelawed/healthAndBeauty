@@ -5,20 +5,23 @@ class CustomAppBar extends StatelessWidget{
   AssetImage leading = AssetImage("assets/icons/home.png");
   String title ="Home" ;
   bool back ;
-  CustomAppBar({this.leading, this.title, this.back}){
+  bool dialog ;
+  CustomAppBar({this.leading, this.title, this.back, this.dialog}){
     if(leading == null)
       leading = AssetImage("assets/icons/home.png");
     if(title == null)
       title ="Home";
+    if(dialog == null)
+      dialog = false ;
   }
   @override
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: 100,
+      height: dialog == false ? 100 : 64,
       color: Colors.white,
       child: Container(
-        margin: EdgeInsets.only(top: 36),
+        margin: EdgeInsets.only(top: dialog ==false ? 36 : 8),
         child: Row(
           mainAxisSize: MainAxisSize.max,
           children: [

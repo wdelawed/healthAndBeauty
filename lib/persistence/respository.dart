@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:HealthAndBeauty/model/customer.dart';
 import 'package:HealthAndBeauty/model/networkResponse.dart';
+import 'package:HealthAndBeauty/model/prescription.dart';
 import 'package:HealthAndBeauty/retrofit/apiClient.dart';
 import 'package:dio/dio.dart';
 
@@ -21,6 +22,11 @@ class Repository{
 
   Future<List<Customer>> getAllCustomers() async {
     NetworkResponse<List<Customer>> response = await _apiClient.getCustomers() ;
+    return response.data ;
+  }
+
+    Future<List<Prescription>> getAllPrescriptions() async {
+    NetworkResponse<List<Prescription>> response = await _apiClient.getPrescriptions() ;
     return response.data ;
   }
 

@@ -1,63 +1,84 @@
- import 'package:HealthAndBeauty/model/prescription.dart';
+import 'package:HealthAndBeauty/customers/ui/customer_details_screen.dart';
+import 'package:HealthAndBeauty/helpers/custom_colors.dart';
+import 'package:HealthAndBeauty/helpers/uitilities.dart';
+import 'package:HealthAndBeauty/model/prescription.dart';
+import 'package:HealthAndBeauty/prescriptions/ui/presciption_details.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
-class PrescriptionWidget extends StatelessWidget {
-  Prescription prescription ;
-  int id ;
-  PrescriptionWidget(this.prescription, {this.id}) {
-    if (id == null)
-      id = 0 ; 
-
-  }
+class PrescriptionItem extends StatelessWidget {
+  final Prescription _prescription;
+  final int id;
+  PrescriptionItem(this._prescription, this.id);
   @override
   Widget build(BuildContext context) {
     return Container(
-      alignment: Alignment.topCenter,
-      height: 82,
-      margin: EdgeInsets.symmetric(horizontal:29),
+      width: MediaQuery.of(context).size.width,
+      height: 150,
+      padding: EdgeInsets.only(left: 29, right: 29, bottom: 31),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            alignment: Alignment.center,
-            width: 34,
-            height: 34,
-            decoration: BoxDecoration(
-              border:Border.all(
-                width: 1 , 
-                color: Color(0x80464646)
+        children: <Widget>[
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(
+                PageRouteBuilder(
+                  transitionDuration: Duration(milliseconds: 200),
+                  pageBuilder: (BuildContext context,
+                      Animation<double> animation,
+                      Animation<double> secondaryAnimation) {
+                    return PrescriptionDetails(_prescription,id: id);
+                  },
+                  transitionsBuilder: (BuildContext context,
+                      Animation<double> animation,
+                      Animation<double> secondaryAnimation,
+                      Widget child) {
+                    return Align(
+                      child: FadeTransition(
+                        opacity: animation,
+                        child: child,
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
+            child: Hero(
+              tag: "Prescription${id}",
+              child: Container(
+                width: 101,
+                height: 118,
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: NetworkImage(
+                            "${Utils.imagesUrl}${_prescription.presc_image}"),
+                        fit: BoxFit.cover),
+                    color: Colors.grey,
+                    borderRadius: BorderRadius.circular(6)),
               ),
-              borderRadius: BorderRadius.all(Radius.circular(34))
-              ),
-            child: Text(
-              "0$id",
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color:Color(0x80464646)),
-              textAlign: TextAlign.center,
             ),
           ),
           Container(
-            margin: EdgeInsets.only(left:17),
-            width: 172,
-            child: Text(
-              "${prescription.name}", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color:Color(0xff464646)),),
-          ),
-          Expanded(
-            child: Container(
-              alignment: Alignment.topRight,
-              margin: EdgeInsets.only(left:4),
-              child: Text(_formatDate(prescription.pivot.created_at), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color:Color(0xff5B139A)),),
-            )
+            height: 82,
+            margin: EdgeInsets.only(left: 26, top: 16, bottom: 21),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                    width: 171,
+                    child:
+                        Text("${_prescription.name}", style: UiColors.title)),
+                Container(
+                    width: 171,
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      "sold ${_prescription.customers} times",
+                      textAlign: TextAlign.start,
+                    ))
+              ],
+            ),
           )
-        ]
+        ],
       ),
     );
-  }
-
-  String _formatDate(String dateString) {
-    DateFormat outputFormat = DateFormat("dd-MM\nyyyy") ;
-    dynamic s = dateString.split("T")[0].split("-") ;
-    DateTime d = DateTime(int.parse(s[0]), int.parse(s[1]), int.parse(s[2])) ;
-    return outputFormat.format(d) ;
   }
 }

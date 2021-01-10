@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:HealthAndBeauty/model/customer.dart';
 import 'package:HealthAndBeauty/model/networkResponse.dart';
+import 'package:HealthAndBeauty/model/prescription.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -19,6 +20,9 @@ return _ApiClient(dio, baseUrl: "http://192.168.44.103:8000/api/");}
 
 @GET('/customer/')
 Future<NetworkResponse<List<Customer>>> getCustomers() ; 
+
+@GET('/prescription/')
+Future<NetworkResponse<List<Prescription>>> getPrescriptions() ; 
 
 @GET('/customer/{id}')
 Future<NetworkResponse<Customer>> getCustomer(@Path("id") int id);

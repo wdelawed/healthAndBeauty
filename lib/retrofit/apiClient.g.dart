@@ -38,6 +38,28 @@ class _ApiClient implements ApiClient {
   }
 
   @override
+  Future<NetworkResponse<List<Prescription>>> getPrescriptions() async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<Map<String, dynamic>>('/prescription/',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'GET',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = NetworkResponse<List<Prescription>>.fromJson(
+        _result.data,
+        (json) => (json as List<dynamic>)
+            .map<Prescription>(
+                (i) => Prescription.fromJson(i as Map<String, dynamic>))
+            .toList());
+    return value;
+  }
+
+  @override
   Future<NetworkResponse<Customer>> getCustomer(id) async {
     ArgumentError.checkNotNull(id, 'id');
     const _extra = <String, dynamic>{};

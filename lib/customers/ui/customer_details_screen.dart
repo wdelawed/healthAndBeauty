@@ -1,8 +1,9 @@
 import 'package:HealthAndBeauty/model/customer.dart';
 import 'package:HealthAndBeauty/model/prescription.dart';
 import 'package:HealthAndBeauty/widgets/CustomAppBar.dart';
+import 'package:HealthAndBeauty/widgets/assign_prescription_dialog.dart';
 import 'package:HealthAndBeauty/widgets/custom_fab.dart';
-import 'package:HealthAndBeauty/widgets/prescription_widget.dart';
+import 'package:HealthAndBeauty/widgets/customer_prescriptions_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +22,15 @@ class CustomerDetailsScreen extends StatelessWidget{
             ],
           ),
         ),
-        floatingActionButton: CustomFab(),
+        floatingActionButton: CustomFab((){
+          showDialog(
+            
+            context: context, 
+            builder: (context){
+            return AssignPrescDialog();
+            }
+          ) ;
+        }),
       ) ;
     }
   
@@ -63,7 +72,7 @@ class CustomerDetailsScreen extends StatelessWidget{
                           child: Text(customer.name, style: TextStyle(color: Color(0xff464646), fontSize: 24, fontWeight: FontWeight.w500),)) , 
                         Container(
                           margin: EdgeInsets.only(top:4),
-                          child: Text("${customer.age} Years old", style: TextStyle(color: Color(0xff464646), fontSize: 13, fontWeight: FontWeight.w400),)),
+                          child: Text("${customer.diagnosis}", style: TextStyle(color: Color(0xff464646), fontSize: 13, fontWeight: FontWeight.w400),)),
                       ]
                     ),
                   ),
@@ -77,7 +86,7 @@ class CustomerDetailsScreen extends StatelessWidget{
                 children:[
                   Column(
                     children: [
-                      Text("25", style: TextStyle(fontSize: 20, color: Color(0xff454F63), fontWeight: FontWeight.w500)), 
+                      Text("${customer.age}", style: TextStyle(fontSize: 20, color: Color(0xff454F63), fontWeight: FontWeight.w500)), 
                       Text("YEARS", style: TextStyle(fontSize: 11, color: Color(0xff78849E), fontWeight: FontWeight.w500)),
                     ],
                   ),
@@ -93,7 +102,7 @@ class CustomerDetailsScreen extends StatelessWidget{
                   ,
                   Column(
                     children: [
-                      Text("30", style: TextStyle(fontSize: 20, color: Color(0xff454F63), fontWeight: FontWeight.w500)), 
+                      Text("${customer.prescriptions.length}", style: TextStyle(fontSize: 20, color: Color(0xff454F63), fontWeight: FontWeight.w500)), 
                       Text("PRESCRIPTIONS", style: TextStyle(fontSize: 11, color: Color(0xff78849E), fontWeight: FontWeight.w500)),
             
                     ],
@@ -110,8 +119,8 @@ class CustomerDetailsScreen extends StatelessWidget{
                   ,
                   Column(
                     children: [
-                      Text("3", style: TextStyle(fontSize: 20, color: Color(0xff454F63), fontWeight: FontWeight.w500)), 
-                      Text("MONTHS", style: TextStyle(fontSize: 11, color: Color(0xff78849E), fontWeight: FontWeight.w500)),
+                      Text("${customer.since[0]}", style: TextStyle(fontSize: 20, color: Color(0xff454F63), fontWeight: FontWeight.w500)), 
+                      Text("${customer.since[1]}", style: TextStyle(fontSize: 11, color: Color(0xff78849E), fontWeight: FontWeight.w500)),
                     ],
                   ),
                 ]
@@ -165,6 +174,9 @@ class CustomerDetailsScreen extends StatelessWidget{
       ) ;
     }
     else 
-      return Expanded(child: Center(child: Text("this customer has no Supscriptions"),)) ;
+      return Expanded(
+        child: Container(
+          margin: EdgeInsets.only(top:20),
+          child: Text("this customer has no Supscriptions"),)) ;
   }
 }

@@ -2,7 +2,9 @@ import 'package:HealthAndBeauty/bloc/customerBloc.dart';
 import 'package:HealthAndBeauty/customers/events/customers_events.dart';
 import 'package:HealthAndBeauty/customers/ui/customers_screen.dart';
 import 'package:HealthAndBeauty/model/customer.dart';
+import 'package:HealthAndBeauty/model/prescription.dart';
 import 'package:HealthAndBeauty/persistence/respository.dart';
+import 'package:HealthAndBeauty/prescriptions/ui/prescriptions_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,7 +18,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  Repository _repository ; 
+  final Repository _repository ; 
   CustomersBloc _customersBloc ;
   // This widget is the root of your application.
 
@@ -31,12 +33,19 @@ class MyApp extends StatelessWidget {
       create: (context) => _customersBloc,
       child: MaterialApp(
       title: 'Health and Beauty',
+      
       theme: ThemeData(
         fontFamily: "SfUi",
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
+        pageTransitionsTheme: const PageTransitionsTheme(
+            builders: <TargetPlatform, PageTransitionsBuilder>{
+              TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+              TargetPlatform.android: ZoomPageTransitionsBuilder(),
+            },
+          ),
       ),
-      home: CustomersScreen(),
+      home: PrescriptionsPage(),
     ),
     );
   }
