@@ -34,6 +34,8 @@ dependencies:
   flutter_bloc: any
   equatable: any
   flutter_typeahead: any
+  flutter_svg: any
+  image_picker: any
 
 
 
@@ -67,6 +69,9 @@ flutter:
     - assets/icons/plus.png
     - assets/icons/selector.png
     - assets/images/placeholder.png
+    - assets/images/presc_plholder.png
+    - assets/icons/sdg_tag.png
+    - assets/svgs/camera.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

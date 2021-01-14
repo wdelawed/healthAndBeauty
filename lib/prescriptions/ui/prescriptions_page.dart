@@ -5,6 +5,7 @@ import 'package:HealthAndBeauty/prescriptions/bloc/events/prescription_events.da
 import 'package:HealthAndBeauty/prescriptions/bloc/prescription_bloc.dart';
 import 'package:HealthAndBeauty/prescriptions/bloc/states/prescriptions_states.dart';
 import 'package:HealthAndBeauty/widgets/CustomAppBar.dart';
+import 'package:HealthAndBeauty/widgets/add_prescription_dialog.dart';
 import 'package:HealthAndBeauty/widgets/custom_fab.dart';
 import 'package:HealthAndBeauty/widgets/prescription_widget.dart';
 import 'package:flutter/material.dart';
@@ -12,16 +13,21 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PrescriptionsPage extends StatefulWidget{
+  
+  final PrescriptionBloc _bloc = PrescriptionBloc(Repository()) ;
+
+
   @override
   _PrescriptionsPageState createState() => _PrescriptionsPageState();
 }
 
 class _PrescriptionsPageState extends State<PrescriptionsPage> {
-  final PrescriptionBloc _bloc = PrescriptionBloc(Repository()) ;
+  
   @override
   Widget build(BuildContext context) {
+    widget._bloc.add(PrescriptionsIntitEvent()) ;
     return BlocProvider(
-      create: (BuildContext context){return _bloc;},
+      create: (BuildContext context){return widget._bloc;},
       child: Scaffold(
         body: Container(
           child: Column(
@@ -35,13 +41,15 @@ class _PrescriptionsPageState extends State<PrescriptionsPage> {
           ],)
         ),
         backgroundColor: Colors.white,
-        floatingActionButton: CustomFab((){}),
-      ),
-    ) ;
+        floatingActionButton: CustomFab((){
+          showDialog(context: context, builder: (context){
+            return AddPrescriptionDialog();
+          });
+        })
+    ),);
   }
 
   Widget _buildBody(){
-    _bloc.add(PrescriptionsIntitEvent()) ;
     List<Widget> items = List<Widget>() ;
     List<Prescription> prescriptions = List<Prescription>();
 

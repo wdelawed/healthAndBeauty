@@ -23,7 +23,7 @@ class Component {
   String created_at;
   String updated_at;
   int price;
-  Map<String, int> pivot;
+  Map<String, dynamic> pivot;
   Component(
       {this.id,
       this.name,
@@ -44,7 +44,7 @@ class Component {
         created_at: json['created_at'] as String,
         updated_at: json['updated_at'] as String,
         price: json['price'] as int,
-        pivot: json['pivot'] as Map<String, int>,
+        pivot: json['pivot'] as Map<String, dynamic>,
         unit: json['unit'] as String);
   }
 

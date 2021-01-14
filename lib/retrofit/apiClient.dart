@@ -1,12 +1,9 @@
-import 'dart:ffi';
 import 'dart:ui';
 
 import 'package:HealthAndBeauty/model/customer.dart';
 import 'package:HealthAndBeauty/model/networkResponse.dart';
 import 'package:HealthAndBeauty/model/prescription.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
-import 'package:json_annotation/json_annotation.dart';
 import 'package:retrofit/http.dart';
 import 'package:dio/dio.dart';
 

@@ -1,4 +1,5 @@
 
+import 'package:HealthAndBeauty/model/component.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'prescription.g.dart';
@@ -33,10 +34,11 @@ class Prescription {
 
     String presc_image;
     int customers ;
+    List<Component> components ;
 
     
 
-    Prescription({this.id, this.name, this.creation_date, this.notes, this.price, this.pivot, this.customers=0, this.presc_image=""}) ;
+    Prescription({this.id, this.name, this.creation_date, this.notes, this.price, this.pivot, this.customers=0, this.presc_image="", this.components}) ;
 
     factory Prescription.fromJson(Map<String, dynamic> json) {
       return _$PrescriptionFromJson(json) ;
