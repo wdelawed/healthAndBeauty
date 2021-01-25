@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:HealthAndBeauty/model/component.dart';
 import 'package:HealthAndBeauty/model/customer.dart';
 import 'package:HealthAndBeauty/model/networkResponse.dart';
 import 'package:HealthAndBeauty/model/prescription.dart';
@@ -21,6 +22,9 @@ Future<NetworkResponse<List<Customer>>> getCustomers() ;
 @GET('/prescription/')
 Future<NetworkResponse<List<Prescription>>> getPrescriptions() ; 
 
+@GET('/component/')
+Future<NetworkResponse<List<Component>>> getComponents() ; 
+
 @GET('/customer/{id}')
 Future<NetworkResponse<Customer>> getCustomer(@Path("id") int id);
 
@@ -33,21 +37,7 @@ Future<NetworkResponse<Customer>>postCustomer(@Body() Customer customer) ;
 @DELETE("/customer/{id}")
 Future<NetworkResponse<Customer>> deleteCustomer(@Path() int id) ;
 
-@POST("/customer/updateImage")
-@MultiPart()
-Future<NetworkResponse<Dummy>> updateCustomerAfterImage(@Part(name: "after_img", contentType: "") String image_file, @Field() int id) ;
+@POST("/prescription/") 
+Future<NetworkResponse<Prescription>> addPrescription(@Body() Prescription prescription);
 
-}
-class Dummy {
-  Dummy();
-  factory Dummy.fromJson(Map<String, dynamic> json){
-    return null ;
-  }
-
-  Map<String, dynamic> toJson(){
-    return null ;
-  }
-  String toString(){
-    return "null" ;
-  }
 }

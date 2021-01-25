@@ -5,6 +5,7 @@ import 'package:HealthAndBeauty/helpers/uitilities.dart';
 import 'package:HealthAndBeauty/model/component.dart';
 import 'package:HealthAndBeauty/model/prescription.dart';
 import 'package:HealthAndBeauty/widgets/prescription_component_widget.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -32,20 +33,21 @@ class PrescriptionDetails extends StatelessWidget {
             },
           ),
           expandedHeight: 352,
-
           pinned: true,
           flexibleSpace: FlexibleSpaceBar(
             stretchModes: <StretchMode>[StretchMode.blurBackground],
             background: Hero(
-              tag: "Prescription$id",
-              child: Container(
+                tag: "Prescription$id",
+                child: Container(
                   width: MediaQuery.of(context).size.width,
                   height: 352,
-                  child: FadeInImage.assetNetwork(
-                      fit: BoxFit.cover,
-                      placeholder: "assets/images/presc_plholder.png",
-                      image: "${Utils.imagesUrl}${prescription.presc_image}")),
-            ),
+                  child: CachedNetworkImage(
+                    placeholder: (_,__)=> Image.asset("assets/images/presc_plholder.png", fit: BoxFit.cover,),
+                    fadeInDuration: Duration(milliseconds: 2000),
+                    fit: BoxFit.fitWidth,
+                    imageUrl: "${Utils.imagesUrl}${prescription.presc_image}",
+                  ),
+                )),
           ),
         ),
         SliverList(
@@ -86,8 +88,8 @@ class PrescriptionDetails extends StatelessWidget {
                   minWidth: 88.0,
                   minHeight: 44.0), // min sizes for Material buttons
               alignment: Alignment.center,
-              child: const Text(
-                '500 SDG',
+              child: Text(
+                "${prescription.price} SDG",
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -135,7 +137,8 @@ class PrescriptionDetails extends StatelessWidget {
         ),
       ),
     ];
-
+    if (prescription.components == null)
+      prescription.components = List<Component>();
     if (prescription.components.isNotEmpty) {
       int pos = 0;
       for (Component component in prescription.components) {
@@ -144,7 +147,6 @@ class PrescriptionDetails extends StatelessWidget {
       }
     } else {
       delegates.add(Container(
-
         child: Center(child: Text("This Prescription has no Components")),
       ));
     }

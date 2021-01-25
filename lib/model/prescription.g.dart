@@ -16,9 +16,11 @@ Prescription _$PrescriptionFromJson(Map<String, dynamic> json) {
     pivot: json['pivot'] == null
         ? null
         : Pivot.fromJson(json['pivot'] as Map<String, dynamic>),
-    customers: json['customers'] == null ? 0 : json['customers'].length,
     presc_image: json['presc_image'] as String,
-    components: List<Component>.from(json['components'].map((e) => Component.fromJson(e as Map<String, dynamic>)))
+    components: (json['components'] as List)
+        ?.map((e) =>
+            e == null ? null : Component.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
   );
 }
 
@@ -30,7 +32,6 @@ Map<String, dynamic> _$PrescriptionToJson(Prescription instance) =>
       'creation_date': instance.creation_date,
       'price': instance.price,
       'pivot': instance.pivot?.toJson(),
-      'presc_image' : instance.presc_image,
-      'customers': instance.customers,
-      'components': instance.components
+      'presc_image': instance.presc_image,
+      'components': instance.components?.map((e) => e?.toJson())?.toList(),
     };

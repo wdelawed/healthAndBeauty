@@ -1,5 +1,7 @@
 
 import 'package:HealthAndBeauty/model/component.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'prescription.g.dart';
@@ -31,17 +33,29 @@ class Prescription {
     String creation_date ;
     int price ;
     Pivot pivot;
-
+    
+    
     String presc_image;
-    int customers ;
     List<Component> components ;
+
+    int get customers {
+      return 1 ;
+    }
+
+    ImageProvider<dynamic> _image ;
+
+    ImageProvider<dynamic> get image {
+      return _image ;
+    }
 
     
 
-    Prescription({this.id, this.name, this.creation_date, this.notes, this.price, this.pivot, this.customers=0, this.presc_image="", this.components}) ;
+    Prescription({this.id, this.name, this.creation_date, this.notes, this.price, this.pivot, this.presc_image="", this.components}) ;
 
     factory Prescription.fromJson(Map<String, dynamic> json) {
-      return _$PrescriptionFromJson(json) ;
+      Prescription pres =  _$PrescriptionFromJson(json) ;
+      pres._image = pres.presc_image != null ? NetworkImage(pres.presc_image) :  AssetImage("");
+      return pres ;
     }
 
     Map<String, dynamic> toJson() {

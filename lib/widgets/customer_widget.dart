@@ -5,6 +5,8 @@ import 'package:HealthAndBeauty/helpers/uitilities.dart';
 import 'package:HealthAndBeauty/model/customer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomerWidget extends StatelessWidget{
   Customer customer; 
@@ -29,7 +31,7 @@ class CustomerWidget extends StatelessWidget{
                   shape: BoxShape.circle,
                   image: DecorationImage(
                   
-                    image: NetworkImage("${Utils.imagesUrl}{customer.before_img}", ),
+                    image: NetworkImage("${Utils.imagesUrl}${customer.before_img}", ),
                     fit: BoxFit.cover),
                   ) 
                 ),

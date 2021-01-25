@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 class AssignPrescDialog extends StatelessWidget{
   MediaQueryData mediaQuery ;
+  BuildContext providerContext;
   @override
   Widget build(BuildContext context) {
     mediaQuery = MediaQuery.of(context) ;

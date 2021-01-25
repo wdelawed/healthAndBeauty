@@ -60,6 +60,28 @@ class _ApiClient implements ApiClient {
   }
 
   @override
+  Future<NetworkResponse<List<Component>>> getComponents() async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<Map<String, dynamic>>('/component/',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'GET',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = NetworkResponse<List<Component>>.fromJson(
+        _result.data,
+        (json) => (json as List<dynamic>)
+            .map<Component>(
+                (i) => Component.fromJson(i as Map<String, dynamic>))
+            .toList());
+    return value;
+  }
+
+  @override
   Future<NetworkResponse<Customer>> getCustomer(id) async {
     ArgumentError.checkNotNull(id, 'id');
     const _extra = <String, dynamic>{};
@@ -150,16 +172,14 @@ class _ApiClient implements ApiClient {
   }
 
   @override
-  Future<NetworkResponse<Dummy>> updateCustomerAfterImage(
-      image_file, id) async {
-    ArgumentError.checkNotNull(image_file, 'image_file');
-    ArgumentError.checkNotNull(id, 'id');
+  Future<NetworkResponse<Prescription>> addPrescription(prescription) async {
+    ArgumentError.checkNotNull(prescription, 'prescription');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _data = {'id': id};
+    final _data = <String, dynamic>{};
+    _data.addAll(prescription?.toJson() ?? <String, dynamic>{});
     _data.removeWhere((k, v) => v == null);
-    final _result = await _dio.request<Map<String, dynamic>>(
-        '/customer/updateImage',
+    final _result = await _dio.request<Map<String, dynamic>>('/prescription/',
         queryParameters: queryParameters,
         options: RequestOptions(
             method: 'POST',
@@ -167,9 +187,9 @@ class _ApiClient implements ApiClient {
             extra: _extra,
             baseUrl: baseUrl),
         data: _data);
-    final value = NetworkResponse<Dummy>.fromJson(
+    final value = NetworkResponse<Prescription>.fromJson(
       _result.data,
-      (json) => Dummy.fromJson(json),
+      (json) => Prescription.fromJson(json),
     );
     return value;
   }

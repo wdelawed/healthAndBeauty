@@ -2,7 +2,9 @@
 import 'package:HealthAndBeauty/model/customer.dart';
 import 'package:HealthAndBeauty/model/prescription.dart';
 import 'package:HealthAndBeauty/persistence/respository.dart';
+import 'package:HealthAndBeauty/prescriptions/bloc/prescription_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart';
 // import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -16,6 +18,8 @@ class _AssignPrescriptionFormState extends State<AssignPrescriptionForm> {
 
   final _key = GlobalKey<FormState>() ;
 
+  bool closed = true ;
+
    int _presc_id ;
    int _customer_id ;
    final TextEditingController prescController = TextEditingController();
@@ -26,6 +30,7 @@ class _AssignPrescriptionFormState extends State<AssignPrescriptionForm> {
 
   @override
   Widget build(BuildContext context) {
+    closed = false ;
     return Form(
       key: _key, 
       child: Container(
@@ -168,8 +173,9 @@ class _AssignPrescriptionFormState extends State<AssignPrescriptionForm> {
       Repository repository = Repository() ;
       
       try {
-        if(prescriptions == null)
-            prescriptions = await repository.getAllPrescriptions();
+        if(prescriptions == null){
+          prescriptions = await repository.getAllPrescriptions();
+        }
         return prescriptions.where((element) => element.name.toLowerCase().startsWith(keyword.toLowerCase())).toList() ;
       }
       catch(e){
