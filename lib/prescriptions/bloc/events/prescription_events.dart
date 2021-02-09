@@ -7,20 +7,29 @@ class PrescriptionsEvent extends Equatable{
 }
 
 class PrescriptionsIntitEvent extends PrescriptionsEvent {}
-
+class ReloadPrescriptionsEvent extends PrescriptionsEvent {
+  final String msg ;
+  ReloadPrescriptionsEvent(this.msg) ;
+}
 
 
 class AddPrescriptionStartedEvent extends PrescriptionsEvent {}
-class DeletePrescriptionStartedEvent extends PrescriptionsEvent {}
-class ReloadPrescriptionsEvent extends PrescriptionsEvent {}
-
 class AddPrescriptionEvent extends PrescriptionsEvent {
   final Prescription prescription ;
-  AddPrescriptionEvent(this.prescription) ;
+  final index ;
+  AddPrescriptionEvent(this.prescription, {this.index = 0}) ;
 }
+
+class InsertPrescriptionEvent extends PrescriptionsEvent {
+  final Prescription prescription ;
+  final index ;
+  InsertPrescriptionEvent(this.prescription, {this.index = 0}) ;
+}
+
 
 class DeletePrescriptionEvent extends PrescriptionsEvent {
   final int index ; 
   final Prescription item ;
   DeletePrescriptionEvent(this.item, this.index) ;
 }
+class DeletePrescriptionStartedEvent extends PrescriptionsEvent {}

@@ -5,16 +5,24 @@ import 'package:HealthAndBeauty/prescriptions/ui/prescriptions_page.dart';
 import 'package:HealthAndBeauty/widgets/CustomAppBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import 'customers/ui/customers_screen.dart';
 
 class HomePage extends StatefulWidget {
+  
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  CustomersScreen customersScreen ;
+  ComponentsScreen componentsScreen;
+  PrescriptionsPage prescriptionsPage;
+  _HomePageState() {
+    this.customersScreen =  CustomersScreen(); 
+    this.componentsScreen = ComponentsScreen(); 
+    this.prescriptionsPage = PrescriptionsPage();
+    }
   int _selected = 1;
   @override
   Widget build(BuildContext context) {
@@ -25,9 +33,10 @@ class _HomePageState extends State<HomePage> {
             child: IndexedStack(
               index: _selected,
               children: <Widget>[
-                CustomersScreen(),
-                ComponentsScreen(),
-                PrescriptionsPage(),
+                componentsScreen,
+                customersScreen,
+                
+                prescriptionsPage
               ],
             ),
           ),

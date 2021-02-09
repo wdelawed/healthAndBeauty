@@ -1,27 +1,31 @@
 import 'dart:io';
 
 import 'package:HealthAndBeauty/bloc/app_bloc.dart';
+import 'package:HealthAndBeauty/components/bloc/add_component_bloc.dart';
+import 'package:HealthAndBeauty/components/events/components_events.dart';
+import 'package:HealthAndBeauty/components/states/components_state.dart';
 import 'package:HealthAndBeauty/customers/bloc/add_customer_bloc.dart';
 import 'package:HealthAndBeauty/customers/events/customers_events.dart';
 import 'package:HealthAndBeauty/customers/states/customers_states.dart';
 import 'package:HealthAndBeauty/helpers/custom_colors.dart';
+import 'package:HealthAndBeauty/helpers/uitilities.dart';
+import 'package:HealthAndBeauty/model/component.dart';
 import 'package:HealthAndBeauty/model/customer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
-class AddCustomerForm extends StatefulWidget {
+class AddComponentForm extends StatefulWidget {
   @override
-  _AddCustomerFormState createState() => _AddCustomerFormState();
+  _AddComponentFormState createState() => _AddComponentFormState();
 }
 
-class _AddCustomerFormState extends State<AddCustomerForm> {
-  final ImagePicker _imagePicker = ImagePicker();
+class _AddComponentFormState extends State<AddComponentForm> {
   final _key = GlobalKey<FormState>();
-  final Customer _customer = Customer();
-  String _customerImage = "";
+  final Component _component = Component();
 
   final TextEditingController dateController = TextEditingController();
 
@@ -39,78 +43,16 @@ class _AddCustomerFormState extends State<AddCustomerForm> {
         padding: EdgeInsets.only(top: 30, left: 31, right: 30),
         child: Column(children: [
           Container(
-            width: 120,
-            height: 120,
-            child: Stack(
-              children: <Widget>[
-                Container(
-                  width: 120,
-                  height: 120,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: UiColors.navIconsFill,
-                    image: _customerImage.isNotEmpty
-                        ? DecorationImage(
-                            fit: BoxFit.cover,
-                            image: FileImage(File(_customerImage), scale: .5),
-                          )
-                        : null,
-                  ),
-                ),
-                Container(
-                  width: 120,
-                  height: 120,
-                  alignment: Alignment(.6, .6),
-                  child: Container(
-                    width: 29,
-                    height: 29,
-                    decoration: BoxDecoration(shape: BoxShape.circle),
-                    child: ClipPath(
-                      clipBehavior: Clip.antiAlias,
-                      child: FlatButton(
-                        padding: EdgeInsets.all(0),
-                        onPressed: () async {
-                          PickedFile file = await _imagePicker.getImage(
-                              source: ImageSource.gallery);
-                          if (file != null) {
-                            setState(() {
-                              _customerImage = file.path;
-                            });
-                          }
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(6),
-                          width: 29,
-                          height: 29,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Color(0xff716E6E).withOpacity(.90),
-                          ),
-                          child: SvgPicture.asset(
-                            "assets/svgs/camera.svg",
-                            width: 16.5,
-                            height: 12.5,
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
-          Container(
             margin: EdgeInsets.only(top: 22),
             width: 249,
             child: TextFormField(
               onSaved: (v) {
-                _customer.name = v;
+                _component.name = v;
               },
               validator: (v) {
-                if (v.isEmpty) return "Customer Name Can't be empty";
+                if (v.isEmpty) return "Component Name Can't be empty";
                 if (v.length < 6)
-                  return "Customer Name must be 6 Chars at least";
+                  return "Component Name must be 6 Chars at least";
                 return null;
               },
               maxLength: 15,
@@ -124,7 +66,114 @@ class _AddCustomerFormState extends State<AddCustomerForm> {
                 filled: true,
                 border: InputBorder.none,
                 fillColor: Colors.white,
-                hintText: "Customer Name",
+                hintText: "Component Name",
+                hintStyle: TextStyle(
+                    fontSize: 16,
+                    color: UiColors.main.withOpacity(.5),
+                    fontWeight: FontWeight.w500),
+              ),
+            ),
+          ),
+          Row(
+            children: [
+              Container(
+                margin: EdgeInsets.only(top: 16, right: 9),
+                width: 150,
+                child: TextFormField(
+                  onSaved: (v) {
+                    _component.quantity = int.parse(v).toString();
+                  },
+                  validator: (v) {
+                    if (v.isEmpty) return "Component Quantity Can't be empty";
+                    try {
+                      int.parse(v);
+                    } catch (FormatException) {
+                      return "Component Quantity must be a number";
+                    }
+                    return null;
+                  },
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  maxLength: 4,
+                  buildCounter: _buildCounter,
+                  maxLines: 1,
+                  style: TextStyle(
+                      fontSize: 16,
+                      color: Color(0xff8834D0),
+                      fontWeight: FontWeight.w500),
+                  decoration: InputDecoration(
+                    filled: true,
+                    border: InputBorder.none,
+                    fillColor: Colors.white,
+                    hintText: "Quantity",
+                    hintStyle: TextStyle(
+                        fontSize: 16,
+                        color: UiColors.main.withOpacity(.5),
+                        fontWeight: FontWeight.w500),
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 16),
+                width: 90,
+                child: TextFormField(
+                  onSaved: (v) {
+                    _component.unit = v;
+                  },
+                  validator: (v) {
+                    if (v.isEmpty) return "Unit Can't be empty";
+                    return null;
+                  },
+                  keyboardType: TextInputType.text,
+                  maxLength: 4,
+                  buildCounter: _buildCounter,
+                  maxLines: 1,
+                  style: TextStyle(
+                      fontSize: 16,
+                      color: Color(0xff8834D0),
+                      fontWeight: FontWeight.w500),
+                  decoration: InputDecoration(
+                    filled: true,
+                    border: InputBorder.none,
+                    fillColor: Colors.white,
+                    hintText: "Unit",
+                    hintStyle: TextStyle(
+                        fontSize: 16,
+                        color: UiColors.main.withOpacity(.5),
+                        fontWeight: FontWeight.w500),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 22),
+            width: 249,
+            child: TextFormField(
+              onSaved: (v) {
+                _component.price = int.parse(v);
+              },
+              validator: (v) {
+                if (v.isEmpty) return "Component Price Can't be empty";
+                try {
+                  int.parse(v);
+                } catch (FormatException) {
+                  return "Component Price must be a number";
+                }
+                return null;
+              },
+              maxLength: 6,
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              buildCounter: _buildCounter,
+              maxLines: 1,
+              style: TextStyle(
+                  fontSize: 16,
+                  color: Color(0xff8834D0),
+                  fontWeight: FontWeight.w500),
+              decoration: InputDecoration(
+                filled: true,
+                border: InputBorder.none,
+                fillColor: Colors.white,
+                hintText: "Price",
                 hintStyle: TextStyle(
                     fontSize: 16,
                     color: UiColors.main.withOpacity(.5),
@@ -135,32 +184,32 @@ class _AddCustomerFormState extends State<AddCustomerForm> {
           Container(
             margin: EdgeInsets.only(top: 16),
             width: 249,
+            height: 41,
             child: TextFormField(
               onSaved: (v) {
-                _customer.age = int.parse(v);
+                _component.expiry_date = Utils.toServerDate(v);
               },
               validator: (v) {
-                if (v.isEmpty) return "Customer Age Can't be empty";
-                try {
-                  int.parse(v);
-                } catch (FormatException) {
-                  return "Customer Age must be a number";
-                }
-                return null;
+                return v.isEmpty ? "date can't be empty" : null;
               },
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
-              maxLength: 4,
-              buildCounter: _buildCounter,
-              maxLines: 1,
+              readOnly: true,
+              keyboardType: TextInputType.datetime,
+              onTap: _pickDate,
+              controller: dateController,
               style: TextStyle(
                   fontSize: 16,
                   color: Color(0xff8834D0),
                   fontWeight: FontWeight.w500),
               decoration: InputDecoration(
+                suffixIcon: Icon(
+                  Icons.date_range,
+                  color: Color(0xBD8834D0),
+                  size: 18,
+                ),
                 filled: true,
                 border: InputBorder.none,
                 fillColor: Colors.white,
-                hintText: "Customer Age",
+                hintText: "Expiry Date",
                 hintStyle: TextStyle(
                     fontSize: 16,
                     color: UiColors.main.withOpacity(.5),
@@ -168,75 +217,10 @@ class _AddCustomerFormState extends State<AddCustomerForm> {
               ),
             ),
           ),
-          Container(
-            margin: EdgeInsets.only(top: 22),
-            width: 249,
-            child: TextFormField(
-              onSaved: (v) {
-                _customer.diagnosis = v;
-              },
-              validator: (v) {
-                if (v.isEmpty) return "Diagnosis Can't be empty";
-                if (v.length < 6) return "Diagnosis must be 6 Chars at least";
-                return null;
-              },
-              maxLength: 21,
-              buildCounter: _buildCounter,
-              maxLines: 1,
-              style: TextStyle(
-                  fontSize: 16,
-                  color: Color(0xff8834D0),
-                  fontWeight: FontWeight.w500),
-              decoration: InputDecoration(
-                filled: true,
-                border: InputBorder.none,
-                fillColor: Colors.white,
-                hintText: "Diagnosis",
-                hintStyle: TextStyle(
-                    fontSize: 16,
-                    color: UiColors.main.withOpacity(.5),
-                    fontWeight: FontWeight.w500),
-              ),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 36),
-            width: 249,
-            height: 143,
-            child: TextFormField(
-              onSaved: (v) {
-                _customer.notes = v;
-              },
-              validator: (v) {
-                if (v.isEmpty) return "Notes Can't be empty";
-                if (v.length < 20) {
-                  return "must be a 20 chars at least";
-                }
-                return null;
-              },
-              maxLength: 150,
-              buildCounter: _buildCounter,
-              maxLines: 6,
-              style: TextStyle(
-                  fontSize: 16,
-                  color: Color(0xff8834D0),
-                  fontWeight: FontWeight.w500),
-              decoration: InputDecoration(
-                filled: true,
-                border: InputBorder.none,
-                fillColor: Colors.white,
-                hintText: "Notes ",
-                hintStyle: TextStyle(
-                    fontSize: 16,
-                    color: UiColors.main.withOpacity(.5),
-                    fontWeight: FontWeight.w500),
-              ),
-            ),
-          ),
-          BlocConsumer<AddCustomerBloc, CustomerState>(
-            cubit: BlocProvider.of<AppBloc>(context).customersBloc.addBloc,
+          BlocConsumer<AddComponentBloc, ComponentState>(
+            cubit: BlocProvider.of<AppBloc>(context).componentsBloc.addBloc,
             builder: (context, state) {
-              if (state is AddCustomerLoadingState) {
+              if (state is AddComponentLoadingState) {
                 return Container(
                   margin: EdgeInsets.only(top: 22, bottom: 46),
                   child: Center(
@@ -253,18 +237,9 @@ class _AddCustomerFormState extends State<AddCustomerForm> {
                   onPressed: () {
                     if (_key.currentState.validate()) {
                       _key.currentState.save();
-                      if (_customerImage.isNotEmpty)
-                        _customer.before_img = _customerImage;
-                      if (_customerImage.isEmpty) {
-                        Fluttertoast.showToast(
-                          toastLength: Toast.LENGTH_SHORT,
-                          msg: "please select customer image",
-                        );
-                        return;
-                      }
                       BlocProvider.of<AppBloc>(context)
-                          .customersBloc
-                          .add(AddCustomerEvent(_customer, 0));
+                          .componentsBloc
+                          .add(AddComponentEvent(_component, 0));
                     }
                   },
                   shape: RoundedRectangleBorder(
@@ -272,8 +247,10 @@ class _AddCustomerFormState extends State<AddCustomerForm> {
                   padding: const EdgeInsets.all(0.0),
                   child: Ink(
                     decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                          colors: <Color>[Color(0xff6CBBF5), Color(0xff5B139A)]),
+                      gradient: LinearGradient(colors: <Color>[
+                        Color(0xff6CBBF5),
+                        Color(0xff5B139A)
+                      ]),
                       borderRadius: BorderRadius.all(
                         Radius.circular(4.0),
                       ),
@@ -284,7 +261,7 @@ class _AddCustomerFormState extends State<AddCustomerForm> {
                           minHeight: 44.0), // min sizes for Material buttons
                       alignment: Alignment.center,
                       child: const Text(
-                        'ADD Customer',
+                        'ADD Component',
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,
@@ -297,18 +274,18 @@ class _AddCustomerFormState extends State<AddCustomerForm> {
               );
             },
             listener: (context, state) {
-              if (state is AddCustomerSuccessState) {
+              if (state is AddComponentSuccessState) {
                 Fluttertoast.showToast(
-                  msg: "Customer added successfully",
+                  msg: "Component added successfully",
                   toastLength: Toast.LENGTH_SHORT,
                   timeInSecForIosWeb: 1,
                 );
                 Navigator.pop(context);
               }
-              if (state is AddCustomerErrorState) {
+              if (state is AddComponentErrorState) {
                 Fluttertoast.showToast(
                   msg: "Error adding customer: ${state.error}",
-                  toastLength: Toast.LENGTH_SHORT,
+                  toastLength: Toast.LENGTH_LONG,
                   timeInSecForIosWeb: 1,
                 );
               }
@@ -322,11 +299,29 @@ class _AddCustomerFormState extends State<AddCustomerForm> {
   Widget _buildCounter(BuildContext context,
       {int currentLength, bool isFocused, int maxLength}) {
     return Container(
-      child: Text("$currentLength/$maxLength",
-          style: TextStyle(
-              color: isFocused ? UiColors.main : UiColors.textMain,
-              fontSize: 11,
-              fontWeight: isFocused ? FontWeight.w700 : FontWeight.w300)),
+      child: Text(
+        "$currentLength/$maxLength",
+        style: TextStyle(
+            color: isFocused ? UiColors.main : UiColors.textMain,
+            fontSize: 11,
+            fontWeight: isFocused ? FontWeight.w700 : FontWeight.w300),
+      ),
     );
+  }
+
+  _pickDate() async {
+    print("picking up date");
+    DateTime now = DateTime.now();
+    DateTime date = await showDatePicker(
+        context: context,
+        initialDate: now,
+        firstDate: DateTime(now.year - 1),
+        lastDate: DateTime(now.year + 5));
+
+    DateTime d = DateTime(
+        date.year, date.month, date.day, now.hour, now.minute, now.second);
+    DateFormat format = DateFormat("MM-yyyy");
+
+    dateController.text = format.format(d);
   }
 }

@@ -24,6 +24,11 @@ class PrescriptionsLoadedState extends PrescriptionState {
     PrescriptionsLoadedState({this.prescription});
 }
 
+class PrescriptionMessageState extends PrescriptionState {
+  final String msg ;
+  PrescriptionMessageState(this.msg);
+}
+
 class PrescriptionsErrorState extends PrescriptionState {
   final String error ; 
   PrescriptionsErrorState({this.error});
@@ -36,20 +41,25 @@ class AddPrescriptionInitialState extends PrescriptionState {}
 class AddingPrescriptionState extends PrescriptionState {}
 class PrescriptionAddedState extends PrescriptionState {
   final Prescription prescription ;
+  final int index ;
   
-  PrescriptionAddedState(this.prescription) ;
+  PrescriptionAddedState(this.prescription, this.index) ;
 }
 
 
-
+class DeletePrescriptionInitialState extends PrescriptionState{}
 class PrescriptionDeletedState extends PrescriptionState {
   final int index ; 
-  final List<Prescription> prescriptions ;
-  
-  PrescriptionDeletedState(this.index, this.prescriptions) ;
+  PrescriptionDeletedState(this.index) ;
 }
-class ErrorDeletingPrescriptionState extends PrescriptionState {
+class DeletePrescriptionErrorState extends PrescriptionState {
   final String error ;
-  ErrorDeletingPrescriptionState(this.error) ; 
+  final int index ;
+  final Prescription prescription ;
+  DeletePrescriptionErrorState(this.error, this.prescription, this.index) ; 
 }
-class DeletingPrescriptionState extends PrescriptionState{}
+class DeletingPrescriptionState extends PrescriptionState{
+  final int index ;
+  final Prescription prescription; 
+  DeletingPrescriptionState(this.index, this.prescription);
+}

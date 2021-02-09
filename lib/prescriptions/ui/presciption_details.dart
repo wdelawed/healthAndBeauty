@@ -22,7 +22,9 @@ class PrescriptionDetails extends StatelessWidget {
     return CustomScrollView(
       slivers: <Widget>[
         SliverAppBar(
+          elevation: 0,
           floating: false,
+          pinned:true,
           title: Text("${prescription.name}"),
           leading: FlatButton(
             child: Image(
@@ -33,18 +35,22 @@ class PrescriptionDetails extends StatelessWidget {
             },
           ),
           expandedHeight: 352,
-          pinned: true,
           flexibleSpace: FlexibleSpaceBar(
+          
             stretchModes: <StretchMode>[StretchMode.blurBackground],
             background: Hero(
                 tag: "Prescription$id",
                 child: Container(
+                  color: Colors.white,
                   width: MediaQuery.of(context).size.width,
                   height: 352,
                   child: CachedNetworkImage(
-                    placeholder: (_,__)=> Image.asset("assets/images/presc_plholder.png", fit: BoxFit.cover,),
-                    fadeInDuration: Duration(milliseconds: 2000),
-                    fit: BoxFit.fitWidth,
+                    placeholder: (_, __) => Image(
+                      image: CachedNetworkImageProvider(
+                          "${Utils.imagesUrl}thumbnails/${prescription.presc_image}"),
+                      fit: BoxFit.cover,
+                    ),
+                    fit: BoxFit.cover,
                     imageUrl: "${Utils.imagesUrl}${prescription.presc_image}",
                   ),
                 )),
@@ -112,7 +118,6 @@ class PrescriptionDetails extends StatelessWidget {
       ),
       Container(
         width: 302,
-        height: 170,
         margin: EdgeInsets.only(top: 10, left: 36, right: 36),
         child: Text(
           "${prescription.notes}",

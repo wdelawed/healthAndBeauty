@@ -1,3 +1,4 @@
+import 'package:HealthAndBeauty/helpers/uitilities.dart';
 import 'package:HealthAndBeauty/model/prescription.dart';
 import 'package:HealthAndBeauty/persistence/respository.dart';
 import 'package:HealthAndBeauty/prescriptions/bloc/events/prescription_events.dart';
@@ -19,11 +20,16 @@ class AddPrescriptionBloc extends Bloc<PrescriptionsEvent, PrescriptionState>{
       try {
         yield AddingPrescriptionsState() ;
         Prescription pres = await _repository.addPrescription(event.prescription) ;
-        yield PrescriptionAddedState(pres) ;
+        yield PrescriptionAddedState(pres, event.index) ;
       }
       catch (e) {
-        yield AddPrescriptionsErrorState(e.toString()) ;
+        yield AddPrescriptionsErrorState(Utils.parseError(e)) ;
       }
+    }
+    else if(event is InsertPrescriptionEvent){
+      yield AddingPrescriptionsState();
+      await Future.delayed(Duration(milliseconds: 50));
+      yield PrescriptionAddedState(event.prescription, event.index) ;
     }
   }
 

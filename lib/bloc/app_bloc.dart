@@ -27,8 +27,8 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   @override
   Stream<AppState> mapEventToState(AppEvent event) async*{
     yield AppInitState() ;
-    customersBloc.add(CustomersIntitEvent()) ;
-    componentsBloc.add(ComponentInitEvent()) ;
+    customersBloc.add(GetCustomersStartedEvent()) ;
+    componentsBloc.add(GetComponentsStartedEvent()) ;
     prescriptionBloc.add(PrescriptionsIntitEvent()) ;
     yield AppInitializedState();
   }

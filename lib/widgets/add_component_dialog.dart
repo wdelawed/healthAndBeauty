@@ -1,10 +1,10 @@
-import 'package:HealthAndBeauty/widgets/add_customer_form.dart';
+import 'package:HealthAndBeauty/widgets/add_component_form.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'CustomAppBar.dart';
 
-class AddCustomerDialog extends StatelessWidget {
+class AddComponentDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,9 +20,9 @@ class AddCustomerDialog extends StatelessWidget {
                     CustomAppBar(
                       back: false,
                       dialog: true,
-                      title: "Add new Customer",
+                      title: "Add new Component",
                     ),
-                    AddCustomerForm(),
+                    AddComponentForm(),
                   ],
                 ),
               ),

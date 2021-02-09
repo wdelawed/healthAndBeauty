@@ -35,9 +35,18 @@ Future<NetworkResponse<Customer>> editCustomer(@Body() Customer customer, @Path(
 Future<NetworkResponse<Customer>>postCustomer(@Body() Customer customer) ;
 
 @DELETE("/customer/{id}")
-Future<NetworkResponse<Customer>> deleteCustomer(@Path() int id) ;
+Future<NetworkResponse<int>> deleteCustomer(@Path() int id) ;
 
 @POST("/prescription/") 
 Future<NetworkResponse<Prescription>> addPrescription(@Body() Prescription prescription);
+
+@POST("/component/") 
+Future<NetworkResponse<Component>> addComponent(@Body() Component component);
+
+@DELETE("/prescription/{id}") 
+Future<NetworkResponse<int>> deletePrescription(@Path() int id) ;
+
+@DELETE("/component/{id}") 
+Future<NetworkResponse<int>> deleteComponent(@Path() int id) ;
 
 }

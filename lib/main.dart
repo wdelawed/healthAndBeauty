@@ -34,10 +34,12 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<AppBloc>(
+      lazy: false,
       create: (context)=> _appBloc,
       child: MaterialApp(
         title: 'Health and Beauty',
         theme: ThemeData(
+          
           accentColor: Colors.white,
           fontFamily: "SfUi",
           primarySwatch: Colors.deepPurple,
@@ -46,6 +48,11 @@ class _MyAppState extends State<MyApp> {
             builders: <TargetPlatform, PageTransitionsBuilder>{
               TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
               TargetPlatform.android: ZoomPageTransitionsBuilder(),
+              TargetPlatform.fuchsia: ZoomPageTransitionsBuilder(),
+              TargetPlatform.windows: ZoomPageTransitionsBuilder(),
+              TargetPlatform.linux: ZoomPageTransitionsBuilder(),
+              TargetPlatform.macOS: ZoomPageTransitionsBuilder(),
+
             },
           ),
         ),

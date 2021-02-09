@@ -110,7 +110,6 @@ class _ApiClient implements ApiClient {
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(customer?.toJson() ?? <String, dynamic>{});
-    _data.removeWhere((k, v) => v == null);
     final _result = await _dio.request<Map<String, dynamic>>(
         '/customer/$id/edit',
         queryParameters: queryParameters,
@@ -134,7 +133,6 @@ class _ApiClient implements ApiClient {
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(customer?.toJson() ?? <String, dynamic>{});
-    _data.removeWhere((k, v) => v == null);
     final _result = await _dio.request<Map<String, dynamic>>('/customer/',
         queryParameters: queryParameters,
         options: RequestOptions(
@@ -151,7 +149,7 @@ class _ApiClient implements ApiClient {
   }
 
   @override
-  Future<NetworkResponse<Customer>> deleteCustomer(id) async {
+  Future<NetworkResponse<int>> deleteCustomer(id) async {
     ArgumentError.checkNotNull(id, 'id');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -164,9 +162,9 @@ class _ApiClient implements ApiClient {
             extra: _extra,
             baseUrl: baseUrl),
         data: _data);
-    final value = NetworkResponse<Customer>.fromJson(
+    final value = NetworkResponse<int>.fromJson(
       _result.data,
-      (json) => Customer.fromJson(json),
+      (json) => json as int,
     );
     return value;
   }
@@ -178,7 +176,6 @@ class _ApiClient implements ApiClient {
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(prescription?.toJson() ?? <String, dynamic>{});
-    _data.removeWhere((k, v) => v == null);
     final _result = await _dio.request<Map<String, dynamic>>('/prescription/',
         queryParameters: queryParameters,
         options: RequestOptions(
@@ -190,6 +187,71 @@ class _ApiClient implements ApiClient {
     final value = NetworkResponse<Prescription>.fromJson(
       _result.data,
       (json) => Prescription.fromJson(json),
+    );
+    return value;
+  }
+
+  @override
+  Future<NetworkResponse<Component>> addComponent(component) async {
+    ArgumentError.checkNotNull(component, 'component');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(component?.toJson() ?? <String, dynamic>{});
+    final _result = await _dio.request<Map<String, dynamic>>('/component/',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'POST',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = NetworkResponse<Component>.fromJson(
+      _result.data,
+      (json) => Component.fromJson(json),
+    );
+    return value;
+  }
+
+  @override
+  Future<NetworkResponse<int>> deletePrescription(id) async {
+    ArgumentError.checkNotNull(id, 'id');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<Map<String, dynamic>>(
+        '/prescription/$id',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'DELETE',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = NetworkResponse<int>.fromJson(
+      _result.data,
+      (json) => json as int,
+    );
+    return value;
+  }
+
+  @override
+  Future<NetworkResponse<int>> deleteComponent(id) async {
+    ArgumentError.checkNotNull(id, 'id');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<Map<String, dynamic>>('/component/$id',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'DELETE',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = NetworkResponse<int>.fromJson(
+      _result.data,
+      (json) => json as int,
     );
     return value;
   }

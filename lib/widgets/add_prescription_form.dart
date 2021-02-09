@@ -244,7 +244,7 @@ class _AddPrescriptionFormState extends State<AddPrescriptionForm> {
             ),
           ),
           BlocConsumer<AddPrescriptionBloc, PrescriptionState>(
-              cubit: BlocProvider.of<AppBloc>(context).prescriptionBloc.bloc,
+              cubit: BlocProvider.of<AppBloc>(context).prescriptionBloc.addBloc,
               builder: (context, state) {
                 if (state is AddingPrescriptionsState) {
                   return Container(

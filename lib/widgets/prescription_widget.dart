@@ -1,9 +1,12 @@
+import 'package:HealthAndBeauty/bloc/app_bloc.dart';
 import 'package:HealthAndBeauty/helpers/custom_colors.dart';
 import 'package:HealthAndBeauty/helpers/uitilities.dart';
 import 'package:HealthAndBeauty/model/prescription.dart';
+import 'package:HealthAndBeauty/prescriptions/bloc/events/prescription_events.dart';
 import 'package:HealthAndBeauty/prescriptions/ui/presciption_details.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class PrescriptionItem extends StatelessWidget {
@@ -17,6 +20,12 @@ class PrescriptionItem extends StatelessWidget {
       margin: EdgeInsets.only(bottom: 31),
       child: Container(
         child: Dismissible(
+          onDismissed: (_) {
+            BlocProvider.of<AppBloc>(context)
+                .prescriptionBloc
+                .add(DeletePrescriptionEvent(_prescription, id));
+            
+          },
           secondaryBackground: Container(
             alignment: AlignmentDirectional.centerEnd,
             color: Colors.redAccent,
@@ -43,7 +52,7 @@ class PrescriptionItem extends StatelessWidget {
               ),
             ),
           ),
-          key: Key(_prescription.id.toString()),
+          key: UniqueKey(),
           child: Container(
             padding: EdgeInsets.only(left: 29, right: 29),
             child: Row(
@@ -69,10 +78,9 @@ class PrescriptionItem extends StatelessWidget {
                               print("error loading image");
                             },
                             image: CachedNetworkImageProvider(
-              
-                                "${Utils.imagesUrl}${_prescription.presc_image}",
-                                scale: 0.25,
-                                ),
+                              "${Utils.imagesUrl}thumbnails/${_prescription.presc_image}",
+                              scale: 0.25,
+                            ),
                             fit: BoxFit.cover),
                         color: Colors.grey,
                         borderRadius: BorderRadius.circular(6),

@@ -33,7 +33,8 @@ class Component {
       this.unit,
       this.updated_at,
       this.price,
-      this.pivot});
+      this.pivot = const {"prescription_id": null, "component_id": null}
+      });
 
   factory Component.fromJson(Map<String, dynamic> json) {
     return Component(
